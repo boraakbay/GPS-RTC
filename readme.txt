@@ -27,7 +27,7 @@ Screen is as follows;
 *:GPS Lock Status. Either a locked or unlocked padlock
 
 To customize to your local time;
-  Change line 37 to your timezone,
-  Change line 189 to your desired timezone name (3 characters),
-  Change line 200 to your GMT or UTC timezone name
+  Change line 10 to your timezone,
+  Change line 145 to your desired timezone name (3 characters),
+  Change line 156 to your GMT or UTC timezone value (GMT+3, UTC-5, etc.)
   
