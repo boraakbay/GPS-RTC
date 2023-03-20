@@ -1,5 +1,5 @@
 # GPS-RTC
-GPS Realtime Clock with Arduino Nano and NEO-6M. Heavily influenced from Ingo Lohs's "A cheap and accurate clock based on GPS" project.
+GPS Realtime Clock with Arduino Nano and NEO-6M. Heavily influenced from Ingo Lohs's "A cheap and accurate clock based on GPS" project at https://www.hackster.io/ingo-lohs/a-cheap-and-accurate-clock-based-on-gps-adc0d9.
 
 This is a GPS Realtime Clock project with Arduino Nano, I2C LCD 20x4 and NEO-6M GPS module.
 
