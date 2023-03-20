@@ -1,19 +1,3 @@
-// Test code for Adafruit GPS modules using MTK3329/MTK3339 driver
-//
-// This code shows how to listen to the GPS module in an interrupt
-// which allows the program to have more 'freedom' - just parse
-// when a new NMEA sentence is available! Then access data when
-// desired.
-//
-// Tested and works great with the Adafruit Ultimate GPS module
-// using MTK33x9 chipset
-//    ------> http://www.adafruit.com/products/746
-// Pick one up today at the Adafruit electronics shop
-// and help support open source hardware & software! -ada
-
-// modified 01.02.2020 - Ingo Lohs
-// GPRMC & GPGGA decoder: https://rl.se/gprmc
-
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x3F,20,4);  // set the LCD address to 0x27 for a 16 chars and 2 line display > 0x3F in my case for a 2004 lcd display
@@ -60,29 +44,22 @@ void setup()
   lcd.setCursor(7,2);
   lcd.print("TA2BXX");
   delay(5000);
-
-  // connect at 115200 so we can read the GPS fast enough and echo without dropping chars
-  // also spit it out
   Serial.begin(115200);
   delay(5000);
   Serial.println("Adafruit GPS library basic test!");
-
-  // 9600 NMEA is the default baud rate for Adafruit MTK GPS's- some use 4800
   GPS.begin(9600); // > in my case I use UBLOX 6M: GY-GPS6Mv2
 
   // uncomment this line to turn on RMC (recommended minimum) and GGA (fix data) including altitude
   GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+      
   // uncomment this line to turn on only the "minimum recommended" data
   //GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
-  // For parsing data, we don't suggest using anything but either RMC only or RMC+GGA since
-  // the parser doesn't care about other sentences at this time
 
   // Set the update rate
   GPS.sendCommand(PMTK_SET_NMEA_UPDATE_2HZ);   // 2 Hz update rate
   // For the parsing code to work nicely and have time to sort thru the data, and
   // print it out we don't suggest using anything higher than 1 Hz
 
-  // Request updates on antenna status, comment out to keep quiet
   GPS.sendCommand(PGCMD_ANTENNA);
 
   delay(1000);
@@ -107,22 +84,13 @@ void loop()                     // run over and over again
   // if you want to debug, this is a good time to do it!
   if ((c) && (GPSECHO))
     Serial.write(c);
-
-  // if a sentence is received, we can check the checksum, parse it...
   if (GPS.newNMEAreceived()) {
-    // a tricky thing here is if we print the NMEA sentence, or data
-    // we end up not listening and catching other sentences!
-    // so be very wary if using OUTPUT_ALLDATA and trytng to print out data
-    //Serial.println(GPS.lastNMEA());   // this also sets the newNMEAreceived() flag to false
-
-    if (!GPS.parse(GPS.lastNMEA()))   // this also sets the newNMEAreceived() flag to false
-      return;  // we can fail to parse a sentence in which case we should just wait for another
+    if (!GPS.parse(GPS.lastNMEA()))   
+      return;
   }
-
-  // if millis() or timer wraps around, we'll just reset it
   if (timer > millis())  timer = millis();
 
-  // approximately every 2 seconds or so, print out the current stats
+  // approximately every 1 second or so, print out the current stats
   if (millis() - timer > 1000) {
     timer = millis(); // reset the timer
 
@@ -146,7 +114,6 @@ void loop()                     // run over and over again
     Serial.print("Fix: "); Serial.print((int)GPS.fix);
     Serial.print(" quality: "); Serial.println((int)GPS.fixquality);
   
-    //Logic for lock calculation
     int GPSFix = (GPS.fix);    
     
     //output LAT LON
@@ -162,7 +129,7 @@ void loop()                     // run over and over again
     // output GMT
     lcd.setCursor(0,1); // ,0 = first line
         lcd.print("GMT ");
-        int gmt = (GPS.hour); // format GPS.hour UTC to your individual timezone
+        int gmt = (GPS.hour);
         if (gmt < 10) { lcd.print('0'); }
         lcd.print(gmt, DEC); lcd.print(':');
         if (GPS.minute < 10) { lcd.print('0'); }
@@ -173,10 +140,10 @@ void loop()                     // run over and over again
         lcd.print("Zulu");
 
 
-    // output to LCD Display
-    lcd.setCursor(0,2); // ,0 = first line
+    // output local time
+    lcd.setCursor(0,2);
     lcd.print("TRT ");
-    int hour = (GPS.hour) + timezone; // format GPS.hour UTC to your individual timezone
+    int hour = (GPS.hour) + timezone;
         if (hour < 10) { lcd.print('0'); }
         lcd.print(hour, DEC); 
         lcd.print(':');
@@ -189,12 +156,16 @@ void loop()                     // run over and over again
         lcd.print("GMT +3");
 
     //output date 
-          lcd.setCursor(0,3); // ,3 = fourth line
+          lcd.setCursor(0,3);
+          lcd.print("  ");
+          lcd.setCursor(0,3);
           if (GPS.day < 10) { lcd.print('0'); }
           lcd.print(GPS.day); 
           
           lcd.print('/');
-
+          lcd.setCursor(3,3);
+          lcd.print("  ");
+          lcd.setCursor(3,3);
           if (GPS.month < 10) { lcd.print('0'); }
           lcd.print(GPS.month);
 
@@ -217,27 +188,12 @@ void loop()                     // run over and over again
     lcd.write(2);
     }          
 
-    //output satelites
+    //output locked satelite number
           int fix = (GPS.satellites, DEC);
           lcd.setCursor(13,3);
           lcd.print("Sats:"); 
           lcd.print("  ");
           lcd.setCursor(18,3);
           lcd.print(GPS.satellites);
-
-     
-    if (GPS.fix) { // do we have a satelite-connection? if yes, we have more values:
-      Serial.print("Location: ");
-      Serial.print(GPS.latitude, 4); Serial.print(GPS.lat);
-      Serial.print(", ");
-      Serial.print(GPS.longitude, 4); Serial.println(GPS.lon);
-
-      Serial.print("Speed (knots): "); Serial.println(GPS.speed);
-      Serial.print("Angle: "); Serial.println(GPS.angle);
-      Serial.print("Altitude: "); Serial.println(GPS.altitude);
-      Serial.print("Satellites: "); Serial.println((int)GPS.satellites);
-
-
-    }
   }
 }
