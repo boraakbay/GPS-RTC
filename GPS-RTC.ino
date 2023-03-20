@@ -17,24 +17,13 @@
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x3F,20,4);  // set the LCD address to 0x27 for a 16 chars and 2 line display > 0x3F in my case for a 2004 lcd display
-
 #include <Adafruit_GPS.h>
 #include <SoftwareSerial.h>
-
-// Connect the GPS Power pin to 5V
-// Connect the GPS Ground pin to ground
-// Connect the GPS TX (transmit) pin to Digital 8
-// Connect the GPS RX (receive) pin to Digital 7
-
-// you can change the pin numbers to match your wiring:
 SoftwareSerial mySerial(8, 7);
 Adafruit_GPS GPS(&mySerial);
-
-// Set GPSECHO to 'false' to turn off echoing the GPS data to the Serial console
-// Set to 'true' if you want to debug and listen to the raw GPS sentences
 #define GPSECHO  true
 
-int timezone = +3; // Europe/Berlin (UTC +0100) > NMEA is UTC oriented
+int timezone = +3; // Europe/Istanbul (UTC +0300) > NMEA is UTC oriented
 
 //define lock symbol
       byte customCharLock[] = {
