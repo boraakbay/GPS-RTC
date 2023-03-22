@@ -31,3 +31,4 @@ To customize to your local time;
   Change line 145 to your desired timezone name (3 characters),
   Change line 156 to your GMT or UTC timezone value (GMT+3, UTC-5, etc.)
   
+Arduino with this sketch can also be used as a GPS receiver for computer via COM port (CH-34X) using Visual GPS View at https://www.visualgps.net/#visualgpsview-content
