@@ -214,25 +214,22 @@ if (GPS.fix)
       lcd.print("GMT +3");
     }
 
-    //output date
+     //output date
     if (GPS.fix) {
       lcd.setCursor(0, 3); 
       lcd.print("          ");
       lcd.setCursor(0, 3); 
-      if (GPS.day < 10) { lcd.print('0'); }
-      lcd.print(GPS.day);
-      lcd.print('/');
       if (GPS.month < 10) { lcd.print('0'); }
       lcd.print(GPS.month);
-
+      lcd.print('/');
+      if (GPS.day < 10) { lcd.print('0'); }
+      lcd.print(GPS.day);
       lcd.print("/20");
       lcd.print(GPS.year);
     } else {
       lcd.setCursor(0, 3);
       lcd.print("--/--/----");
     }
-
-    
     }
       //GPS Lock state
           if ((GPS.fix)) {
