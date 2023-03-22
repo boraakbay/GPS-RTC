@@ -28,7 +28,7 @@ V1
 
 V2
 -------------------------
-|LAT.LATT°N, LON.LONG°E |
+|LAT.LATT°N  LON.LONG°E |
 |GMT: 12:59:59     ZULU |
 |TRT: 15:59:59     GMT+3|
 |DD/MM/YYYY     Sats:99*|
