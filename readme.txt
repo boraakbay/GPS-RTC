@@ -69,3 +69,5 @@ Arduino with this sketch can also be used as a GPS receiver for computer via COM
 
 Updates on V2:
 -Screen doesn't show any values unless GPS fix is acquired
+
+Case for the project can be 3D printed from https://cults3d.com/en/3d-model/tool/arduino-case-for-20x4-lcd works perfectly!
